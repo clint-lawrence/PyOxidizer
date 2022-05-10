@@ -3,7 +3,7 @@
 
 
 def make_resources():
-    dist = default_python_distribution()
+    dist = default_python_distribution(python_version="3.10")
 
     policy = dist.make_python_packaging_policy()
 
