@@ -86,11 +86,20 @@ where
     let mut config = Config::default();
     config.apply_environment();
     config.exe = Some(exe.to_path_buf());
+
+    // Intention is to concatenate the pyoxy executable with a python
+    // zipapp. So tweak the args to include two copies of the
+    // executable path. So the first "command line" arg to the python
+    // interpreter is the zipapp
+    // This doesn't allow passing args to the interpreter though...
     config.argv = Some(
-        vec![exe.as_os_str().to_os_string()]
-            .into_iter()
-            .chain(args.iter().map(|x| x.into()))
-            .collect::<Vec<_>>(),
+        vec![
+            exe.as_os_str().to_os_string(),
+            exe.as_os_str().to_os_string(),
+        ]
+        .into_iter()
+        .chain(args.iter().map(|x| x.into()))
+        .collect::<Vec<_>>(),
     );
 
     let interp =

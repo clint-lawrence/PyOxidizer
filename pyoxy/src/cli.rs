@@ -14,15 +14,18 @@ const PYOXY_VERSION: &str = env!("CARGO_PKG_VERSION");
 pub fn run() -> Result<i32> {
     let exe = std::env::current_exe().context("resolving current executable")?;
 
+    // Temporarity hijack this and just run the interpreter
+    run_python(&exe, &std::env::args_os().skip(1).collect::<Vec<_>>())
+
     // If the current executable looks like `python`, we effectively dispatch to
     // `pyoxy run-python -- <args>`.
-    if let Some(stem) = exe.file_stem() {
-        if stem.to_string_lossy().starts_with("python") {
-            return run_python(&exe, &std::env::args_os().skip(1).collect::<Vec<_>>());
-        }
-    }
+    // if let Some(stem) = exe.file_stem() {
+    //     if stem.to_string_lossy().starts_with("python") {
 
-    run_normal(&exe)
+    //     }
+    // }
+
+    // run_normal(&exe)
 }
 
 fn run_normal(exe: &Path) -> Result<i32> {
